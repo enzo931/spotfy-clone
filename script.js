@@ -196,6 +196,22 @@ const albuns = [
     musicas: [
      { nome: "Squabble Up", artista: "Kendrick Lamar", arquivo: "assets/rap/kendrick/squabble-up.mp3" },
     ]
+  },
+  {
+    nome: "Thug Theory",
+    artista: "2Pac, Pop Smoke, Biggie, DMX, Eazy E, Ice Cube, Dr Dre, NWA, Nipsey, Snoop Dogg",
+    capa: "assets/imgs/capas/Write_This_Down.jpg",
+    musicas: [
+     { nome: "Write This Down", artista: "2Pac, Pop Smoke, Biggie, DMX, Eazy E, Ice Cube, Dr Dre, NWA, Nipsey, Snoop Dogg", arquivo: "assets/rap/Write-This-Down/Write_This_Down.mp3" },
+    ]
+  },
+  {
+    nome: "Mhrap X HoodTrap",
+    artista: "Mhrap",
+    capa: "assets/imgs/capas/mhrap-hoodtrap.jpg",
+    musicas: [
+     { nome: "Tipo Madara - Hoodtrap", artista: "Mhrap", arquivo: "assets/rap_geek/mhrap/tipo-madara-hoodtrap.unknown" },
+    ]
   }
 ];
 
