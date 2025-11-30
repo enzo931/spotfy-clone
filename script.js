@@ -144,8 +144,45 @@ const albuns = [
     musicas: [
      { nome: "Back in Black", artista: "AC/DC", arquivo: "assets/rock/ACDC/back-in-black.mp3" },
     ]
+  },
+  {
+    nome: "Astroworld",
+    artista: "Travis Scott",
+    capa: "assets/imgs/capas/Astroworld.jpg",
+    musicas: [
+     { nome: "Sicko Mode", artista: "Travis Scott (feat. Drake)", arquivo: "assets/trap/travis/sicko-mode.mp3" },
+    ]
+  },
+  {
+    nome: "Thriller",
+    artista: "Michael Jackson",
+    capa: "assets/imgs/capas/Thriller.jpg",
+    musicas: [
+     { nome: "Billie Jean", artista: "Michael Jackson", arquivo: "assets/pop/Michael_Jackson/Billie_Jean.mp3" },
+     { nome: "Beat It", artista: "Michael Jackson", arquivo: "assets/pop/Michael_Jackson/Beat_It.mp3" },
+    ]
+  },
+  {
+    nome: "Mhrap",
+    artista: "Mhrap",
+    capa: "assets/imgs/capas/Mhrap.jpg",
+    musicas: [
+     { nome: "Tipo Madara", artista: "Mhrap", arquivo: "assets/rap_geek/mhrap/Tipo-Madara.mp3" },
+     { nome: "Ninja Descolado", artista: "Mhrap", arquivo: "assets/rap_geek/mhrap/Ninja-Descolado.mp3" },
+     { nome: "Tipo Kakuzu", artista: "Mhrap", arquivo: "assets/rap_geek/mhrap/Tipo-Kakuzu.mp3" },
+    ]
+  },
+  {
+    nome: "Single",
+    artista: "Akashi",
+    capa: "assets/imgs/capas/akashi.jpg",
+    musicas: [
+     { nome: "Na Fumaça", artista: "Akashi", arquivo: "assets/rap_geek/akashi/na-fumaca.unknown" },
+    ]
   }
 ];
+
+
 
 let playlistAtual = []; // Playlist ativa
 let favoritos = []; // Lista de músicas favoritas

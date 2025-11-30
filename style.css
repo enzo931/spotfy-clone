@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 * {
   margin: 0;
   padding: 0;
@@ -257,10 +256,6 @@ body:not(.dark-mode) #barra-progresso {
 body:not(.dark-mode) #barra-progresso::-webkit-slider-thumb {
   background: #14833b;
 }
-
-
-
-=======
 * {
   margin: 0;
   padding: 0;
@@ -519,7 +514,3 @@ body:not(.dark-mode) #barra-progresso {
 body:not(.dark-mode) #barra-progresso::-webkit-slider-thumb {
   background: #14833b;
 }
-
-
-
->>>>>>> d8e29a1b25cb40cbf590c71b4eef3bf957931f81
