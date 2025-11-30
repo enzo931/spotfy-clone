@@ -179,120 +179,191 @@ const albuns = [
     musicas: [
      { nome: "Na Fumaça", artista: "Akashi", arquivo: "assets/rap_geek/akashi/na-fumaca.unknown" },
     ]
+  },
+  {
+    nome: "Maquina do Tempo",
+    artista: "Matue",
+    capa: "assets/imgs/capas/matue.jpg",
+    musicas: [
+     { nome: "777-666", artista: "Matue", arquivo: "assets/trap/matue/777-666.mp3" },
+     { nome: "Gorila Roxo", artista: "Matue", arquivo: "assets/trap/matue/Gorilla-Roxo.mp3" },
+    ]
+  },
+  {
+    nome: "GNX",
+    artista: "Kendrick Lamar",
+    capa: "assets/imgs/capas/kendrick.jpg",
+    musicas: [
+     { nome: "Squabble Up", artista: "Kendrick Lamar", arquivo: "assets/rap/kendrick/squabble-up.mp3" },
+    ]
   }
 ];
 
 
 
-let playlistAtual = []; // Playlist ativa
-let favoritos = []; // Lista de músicas favoritas
+// ------------------------------------------
+// VARIÁVEIS PRINCIPAIS
+// ------------------------------------------
+let playlistAtual = [];
+let favoritos = [];
 let indexAtual = 0;
 let isPlaying = false;
 
 const audio = document.getElementById("audio-player");
-const playButton = document.querySelector(".controls button:nth-child(2)");
-const prevButton = document.querySelector(".controls button:nth-child(1)");
-const nextButton = document.querySelector(".controls button:nth-child(3)");
+const playBtn = document.getElementById("play-btn");
+const prevBtn = document.getElementById("prev-btn");
+const nextBtn = document.getElementById("next-btn");
+const favBtn = document.getElementById("fav-btn");
 const songInfo = document.querySelector(".song-info");
 
+// ------------------------------------------
+// CARREGAR ÁLBUM
+// ------------------------------------------
 function carregarAlbum(album) {
   playlistAtual = album.musicas;
   indexAtual = 0;
   exibirListaDeMusicas(playlistAtual);
-  carregarMusica(indexAtual);
+  carregarMusica(0);
 }
 
-function favoritarMusica(musica, botao) {
-  const index = favoritos.findIndex(fav => fav.nome === musica.nome && fav.artista === musica.artista);
+// ------------------------------------------
+// FAVORITAR
+// ------------------------------------------
+function favoritarMusica(musica) {
+  const index = favoritos.findIndex(f => f.nome === musica.nome && f.artista === musica.artista);
+
   if (index === -1) {
     favoritos.push(musica);
-    botao.textContent = "★";
   } else {
     favoritos.splice(index, 1);
-    botao.textContent = "☆";
   }
+
+  atualizarIconeFavorito();
+  exibirListaDeMusicas(playlistAtual);
 }
 
+// Ícone do player sincronizado
+function atualizarIconeFavorito() {
+  const musica = playlistAtual[indexAtual];
+  const isFav = favoritos.some(f => f.nome === musica.nome && f.artista === musica.artista);
+
+  favBtn.textContent = isFav ? "★" : "☆";
+}
+
+// ------------------------------------------
+// MOSTRAR FAVORITOS
+// ------------------------------------------
 function mostrarFavoritos() {
+  playlistAtual = favoritos;
   exibirListaDeMusicas(favoritos);
 }
 
+// ------------------------------------------
+// CARREGAR MÚSICA
+// ------------------------------------------
 function carregarMusica(index) {
   const musica = playlistAtual[index];
+
   audio.src = musica.arquivo;
-  songInfo.innerHTML = `<p><strong>${musica.nome}</strong><br>${musica.artista}</p>`;
+
+  songInfo.innerHTML = `
+    <p><strong>${musica.nome}</strong><br><small>${musica.artista}</small></p>
+  `;
+
+  atualizarIconeFavorito();
 }
 
+// ------------------------------------------
+// EXIBIR MÚSICAS
+// ------------------------------------------
 function exibirListaDeMusicas(lista) {
-  const musicListContainer = document.querySelector(".music-list");
-  musicListContainer.innerHTML = "";
-
-  if (lista.length === 0) {
-    musicListContainer.innerHTML = "<p>Nenhuma música encontrada</p>";
-    return;
-  }
-
+  const musicList = document.querySelector(".music-list");
+  musicList.innerHTML = "";
+  
   lista.forEach((musica, index) => {
-    const musicItem = document.createElement("div");
-    musicItem.classList.add("music-item");
-    const isFavorito = favoritos.some(fav => fav.nome === musica.nome && fav.artista === musica.artista);
+    const item = document.createElement("div");
+    item.classList.add("music-item");
+    item.style.opacity = "0";
+    item.style.transform = "translateY(8px)";
+    setTimeout(() => {
+      item.style.opacity = "1";
+      item.style.transform = "translateY(0)";
+    }, 20 * index);
 
-    musicItem.innerHTML = `
+    const isFav = favoritos.some(f => f.nome === musica.nome && f.artista === musica.artista);
+
+    item.innerHTML = `
       <span>${musica.nome} - ${musica.artista}</span>
-      <button class="fav-btn">${isFavorito ? "★" : "☆"}</button>
+      <button class="fav-btn">${isFav ? "★" : "☆"}</button>
     `;
 
-    musicItem.addEventListener("click", () => {
+    // tocar ao clicar
+    item.addEventListener("click", () => {
+      playlistAtual = lista;
       indexAtual = index;
       carregarMusica(indexAtual);
       audio.play();
-      playButton.textContent = "II";
       isPlaying = true;
+      playBtn.textContent = "II";
     });
 
-    const favBtn = musicItem.querySelector(".fav-btn");
-    favBtn.addEventListener("click", (e) => {
+    // favoritar
+    item.querySelector(".fav-btn").addEventListener("click", (e) => {
       e.stopPropagation();
-      favoritarMusica(musica, favBtn);
+      favoritarMusica(musica);
     });
 
-    musicListContainer.appendChild(musicItem);
+    musicList.appendChild(item);
   });
+}
+
+// ------------------------------------------
+// EXIBIR ÁLBUNS
+// ------------------------------------------
+function mostrarAlbuns() {
+  const albumList = document.getElementById("album-list");
+  albumList.classList.remove("hidden");
+  exibirAlbuns();
+  document.querySelector(".music-list").innerHTML = "";
 }
 
 function exibirAlbuns() {
-  const albumContainer = document.querySelector(".album-list");
-  albumContainer.innerHTML = "";
+  const container = document.getElementById("album-list");
+  container.innerHTML = "";
 
-  albuns.forEach(album => {
-    const albumItem = document.createElement("div");
-    albumItem.classList.add("album-item");
-    albumItem.innerHTML = `
+  albuns.forEach((album, index) => {
+    const item = document.createElement("div");
+    item.classList.add("album-item");
+    item.style.opacity = "0";
+    item.style.transform = "translateY(10px)";
+
+    setTimeout(() => {
+      item.style.opacity = "1";
+      item.style.transform = "translateY(0)";
+    }, 30 * index);
+
+    item.innerHTML = `
       <img src="${album.capa}" alt="${album.nome}">
-      <p>${album.nome} - ${album.artista}</p>
+      <p>${album.nome}<br><small>${album.artista}</small></p>
     `;
 
-    albumItem.addEventListener("click", () => carregarAlbum(album));
-    albumContainer.appendChild(albumItem);
+    item.addEventListener("click", () => carregarAlbum(album));
+    container.appendChild(item);
   });
 }
 
-
+// ------------------------------------------
+// PLAYER
+// ------------------------------------------
 function tocarOuPausar() {
   if (isPlaying) {
     audio.pause();
-    playButton.textContent = "▶";
+    playBtn.textContent = "▶";
   } else {
     audio.play();
-    playButton.textContent = "II";
+    playBtn.textContent = "II";
   }
   isPlaying = !isPlaying;
-}
-
-function proximaMusica() {
-  indexAtual = (indexAtual + 1) % playlistAtual.length;
-  carregarMusica(indexAtual);
-  if (isPlaying) audio.play();
 }
 
 function musicaAnterior() {
@@ -301,106 +372,95 @@ function musicaAnterior() {
   if (isPlaying) audio.play();
 }
 
-playButton.addEventListener("click", tocarOuPausar);
-nextButton.addEventListener("click", proximaMusica);
-prevButton.addEventListener("click", musicaAnterior);
+function proximaMusica() {
+  indexAtual = (indexAtual + 1) % playlistAtual.length;
+  carregarMusica(indexAtual);
+  if (isPlaying) audio.play();
+}
 
-exibirAlbuns();
+playBtn.addEventListener("click", tocarOuPausar);
+prevBtn.addEventListener("click", musicaAnterior);
+nextBtn.addEventListener("click", proximaMusica);
+favBtn.addEventListener("click", () => favoritarMusica(playlistAtual[indexAtual]));
 
+// ------------------------------------------
+// PROGRESSO
+// ------------------------------------------
 audio.addEventListener("timeupdate", () => {
+  if (isNaN(audio.duration)) return;
+
   const progresso = (audio.currentTime / audio.duration) * 100;
-  document.getElementById("barra-progresso").value = progresso || 0;
+  document.getElementById("barra-progresso").value = progresso;
 
   document.getElementById("tempo-atual").textContent = formatarTempo(audio.currentTime);
   document.getElementById("tempo-total").textContent = formatarTempo(audio.duration);
 });
 
-function formatarTempo(segundos) {
-  const minutos = Math.floor(segundos / 60);
-  const segundosRestantes = Math.floor(segundos % 60);
-  return `${minutos}:${segundosRestantes < 10 ? "0" : ""}${segundosRestantes}`;
-}
-
 document.getElementById("barra-progresso").addEventListener("input", (e) => {
   const novaPosicao = (e.target.value / 100) * audio.duration;
   audio.currentTime = novaPosicao;
 });
-const searchInput = document.getElementById("search-input");
 
-searchInput.addEventListener("input", () => {
-  const termo = searchInput.value.toLowerCase();
-
-  // Filtra músicas de todos os álbuns que contêm o termo no nome ou artista
-  const musicasFiltradas = albuns.flatMap(album =>
-    album.musicas.filter(musica =>
-      musica.nome.toLowerCase().includes(termo) ||
-      musica.artista.toLowerCase().includes(termo)
-    )
-  );
-
-  // Se não digitou nada, limpa e exibe normalmente
-  if (termo === "") {
-    document.querySelector(".album-list").classList.remove("hidden");
-    exibirListaDeMusicas([]);
-  } else {
-    document.querySelector(".album-list").classList.add("hidden");
-    exibirListaDeMusicas(musicasFiltradas);
-  }
-});
-function mostrarAlbuns() {
-  document.querySelector(".album-list").classList.remove("hidden");
-  document.querySelector(".music-list").innerHTML = "";
+function formatarTempo(seg) {
+  if (!seg) return "0:00";
+  const m = Math.floor(seg / 60);
+  const s = Math.floor(seg % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
 }
 
-function mostrarBiblioteca() {
-  const todasAsMusicas = albuns.flatMap(album => album.musicas);
-  exibirListaDeMusicas(todasAsMusicas);
-  document.querySelector(".album-list").classList.add("hidden");
-}
-
-function mostrarPlaylists() {
-  const musicListContainer = document.querySelector(".music-list");
-  musicListContainer.innerHTML = "<p>Playlists ainda não implementadas.</p>";
-  document.querySelector(".album-list").classList.add("hidden");
-}
-
+// Ativar modo escuro
 function mostrarConfiguracoes() {
   const musicListContainer = document.querySelector(".music-list");
+
   musicListContainer.innerHTML = `
     <h3>⚙️ Configurações</h3>
+
     <div class="setting-item">
       <label>
         <input type="checkbox" id="dark-mode-toggle"> Modo Escuro
-      </label>
-    </div>
-    <div class="setting-item">
-      <label for="volume-slider">Volume Padrão:</label>
-      <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="${audio.volume}">
-    </div>
-    <div class="setting-item">
-      <label>
-        <input type="checkbox" id="show-covers-toggle" checked> Mostrar capas dos álbuns
       </label>
     </div>
   `;
 
   document.querySelector(".album-list").classList.add("hidden");
 
-  document.getElementById("dark-mode-toggle").addEventListener("change", (e) => {
-    document.body.classList.toggle("dark-mode", e.target.checked);
-  });
+  const toggle = document.getElementById("dark-mode-toggle");
 
-  document.getElementById("volume-slider").addEventListener("input", (e) => {
-    audio.volume = parseFloat(e.target.value);
-  });
+  toggle.checked = document.body.classList.contains("dark-mode");
 
-  document.getElementById("show-covers-toggle").addEventListener("change", (e) => {
-    const show = e.target.checked;
-    document.querySelectorAll(".album-item img").forEach(img => {
-      img.style.display = show ? "block" : "none";
-    });
+  toggle.addEventListener("change", () => {
+    document.body.classList.toggle("dark-mode", toggle.checked);
   });
 }
+
+
+// ------------------------------------------
+// BUSCA DINÂMICA
+// ------------------------------------------
+const searchInput = document.getElementById("search-input");
+
+searchInput.addEventListener("input", () => {
+  const termo = searchInput.value.toLowerCase();
+
+  if (termo === "") {
+    mostrarAlbuns();
+    return;
+  }
+
+  const filtradas = albuns.flatMap(a =>
+    a.musicas.filter(m =>
+      m.nome.toLowerCase().includes(termo) ||
+      m.artista.toLowerCase().includes(termo)
+    )
+  );
+
+  playlistAtual = filtradas;
+  document.getElementById("album-list").classList.add("hidden");
+  exibirListaDeMusicas(filtradas);
+});
+
+// iniciar
+exibirAlbuns();
 
 
 
