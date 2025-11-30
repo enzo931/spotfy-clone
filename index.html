@@ -66,3 +66,71 @@
 </body>
 
 </html>
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spotify Clone</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="sidebar">
+    <h2>🎧 Spotify</h2>
+    <ul>
+  <li onclick="mostrarAlbuns()">🏠 Início</li>
+  <li onclick="mostrarFavoritos()">⭐ Favoritos</li>
+  <li onclick="mostrarBiblioteca()">🎵 Biblioteca</li>
+  <li onclick="mostrarPlaylists()">📂 Playlists</li>
+  <li onclick="mostrarConfiguracoes()">⚙️ Configurações</li>
+</ul>
+
+  </div>
+
+  <div class="main-content">
+    <header>
+      <input type="text" id="search-input" placeholder="Buscar músicas..." />
+    </header>
+
+    <section class="cards">
+      <div class="album-list" id="album-list">
+        <!-- Lista de álbuns gerada pelo JS -->
+      </div>
+
+      <div class="music-list">
+        <!-- Lista de músicas gerada pelo JS -->
+      </div>
+    </section>
+
+    <footer class="player">
+      <div class="player-top">
+        <div class="song-info">
+          <p><strong>Nome da Música</strong><br>Artista</p>
+        </div>
+
+        <div class="controls">
+          <button>|◁</button>
+          <button>▶</button>
+          <button>▷|</button>
+          <button id="fav-btn" class="fav-btn">☆</button>
+        </div>
+
+        <button onclick="mostrarFavoritos()">Ver Favoritos</button>
+      </div>
+
+      <div class="progress-container">
+        <span id="tempo-atual">0:00</span>
+        <input type="range" id="barra-progresso" value="0" min="0" max="100" step="1">
+        <span id="tempo-total">0:00</span>
+      </div>
+
+      <audio id="audio-player"></audio>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
